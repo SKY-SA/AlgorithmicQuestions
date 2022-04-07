@@ -72,8 +72,17 @@ namespace Question_2
         private static List<int> PlusMinus(List<int> numbers, int possibility)
         {
             int result = numbers[0];
-            int countOfOperations = 0;
+            
             List<int> listOfResult = new List<int>();
+            List<int> orderOfOperations = new List<int>();
+            // Artı mı Yoksa Eksi mi gelecek bulmak için rastgele üretilecek sayının tutulduğu değişken
+            int probabiltyOfPlusOrMinus = -1;
+            // Verilen sayı rakama ayrıldığı zaman yapılan bir işlemde kaç adet "-" veya "+" olduğunu tutan değişken
+            int countOfOrder = numbers.Count - 1;
+            //Gruplara ayrıldıktan sonra birbiriyle kaç defa karşılaştırılacağını tutan değişken
+            int probabilityOfOrder = 0;
+            int x = 0;
+            int y = 0;
             if (possibility != 0)
             {
                 while(possibility != 0)
@@ -81,20 +90,40 @@ namespace Question_2
                     for (int i = 1; i < numbers.Count; i++)
                     {
                         // Artı mı yoksa eksimi olacak ?
-                        int probabiltyOfPlusOrMinus = rnd.Next(1, 3);
-                        if (probabiltyOfPlusOrMinus == 1)
+                        probabiltyOfPlusOrMinus = rnd.Next(0, 2);
+                        if (probabiltyOfPlusOrMinus == 0)
                         {
                             Console.WriteLine($"{result} + {numbers[i]}");
                             result += numbers[i];
                         }
-                        else
+                        else if(probabiltyOfPlusOrMinus == 1)
                         {
                             Console.WriteLine($"{result} - {numbers[i]}");
                             result -= numbers[i];
                         }
-                        countOfOperations++;
+                        orderOfOperations.Add(probabiltyOfPlusOrMinus);
                     }
-                    Console.WriteLine("------------------------------------");
+                    // İşlem Sırasında kullanılan "+" veya "-" adetinin kaçarlı gruplandırıldığını belirleyip ve bu sayıya(kaç grup olduğunu belirten) göre kaç adet olasılık olacağını 
+                    // (yapılan işlemlerin aynı olup olmadığını kontrol edilmesi için bu listedeki sayıların grup halinde kaç defa birbiriyle karşılaştırılması gerektiğini) hesaplayacığız.
+
+
+                    var combination = orderOfOperations.Count / countOfOrder;
+                    probabilityOfOrder = (combination * (combination - 1)) / 2;
+                    //Console.WriteLine("------------------------------------");
+                    
+                    while (probabilityOfOrder != 0)
+                    {
+                       while(countOfOrder != 0)
+                        {
+                            y = x + countOfOrder;
+                            if(orderOfOperations[x] == orderOfOperations[y])
+                            {
+                            }
+                            x++;
+                        }
+                       
+                    }
+                    // Eğer bir önceki işlemler ile aynı şekilde değilse ekle 
                     listOfResult.Add(result);
                     result = numbers[0];
                     possibility--;
